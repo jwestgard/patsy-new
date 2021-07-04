@@ -1,0 +1,1 @@
+from app.commands import load as loadcommand
