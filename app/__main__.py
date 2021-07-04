@@ -1,50 +1,54 @@
-from sqlalchemy import create_engine
-from sqlalchemy import text
-from sqlalchemy import MetaData
-from sqlalchemy import Table, Column, Integer, String
-from sqlalchemy import ForeignKey
-from sqlalchemy import insert
+!/usr/local/bin python3
 
-import csv
+import click
 import sys
 
-DBFILE = sys.argv[1]
+def parse_args():
+
+    '''Parse args and set the chosen sub-command as the default function.'''
+
+    # main parser for command line arguments
+    parser = argparse.ArgumentParser(
+        description='Digital preservation utilities.'
+        )
+    subparsers = parser.add_subparsers(
+        title='subcommands', description='valid subcommands', 
+        help='-h additional help', metavar='{bc,inv,comp,ver}', dest='cmd'
+        )
+    parser.add_argument(
+        '-v', '--version', action='version', help='Print version number and exit',
+        version='%(prog)s 0.5'
+        )
+    subparsers.required = True
+
+    # parser for the "bagcheck" sub-command
+    bagcheck_parser = subparsers.add_parser(
+        'bagcheck', aliases=['bck'],
+        help='Compare an inventory file against a bagit bag',
+        description='Checks relpath & checksum against bag manifest.'
+        )
+    bagcheck_parser.add_argument(
+        '-i', '--inventory', help='Inventory CSV to compare', action='store'
+        )
+    bagcheck_parser.add_argument(
+        '-b', '--bag', help='Path to BagIt bag', action='store'
+        )
+    bagcheck_parser.set_defaults(func=bagcheck)
+
+
+
+    # parse the args and call the default sub-command function
+    args = parser.parse_args()
+    print_header(args.func.__name__)
+    result = args.func(args)
+    if result:
+        sys.stderr.write(result)
+        sys.stderr.write('\n\n')
+
+
+def main():
+    pass
+
 
 if __name__ == "__main__":
-
-    engine = create_engine(f"sqlite+pysqlite:///{DBFILE}", echo=True, future=True)
-
-    metadata = MetaData()
-
-    countries_table = Table(
-        "countries",
-        metadata,
-        Column('id', Integer, primary_key=True),
-        Column('old_id', Integer),
-        Column('name', String(30)),
-        Column('native', String)
-    )
-
-    cities_table = Table(
-        "cities",
-        metadata,
-        Column('id', Integer, primary_key=True),
-        Column('old_id', Integer),
-        Column('name', String(50)),
-        Column('native', String),
-        Column('country_id', ForeignKey('countries.id'), nullable=False)
-    )
-
-    metadata.create_all(engine)
-
-    countries_data = [row for row in csv.DictReader(open('csv/countries.csv'))]
-    cities_data = [row for row in csv.DictReader(open('csv/cities.csv'))]
-
-    with engine.connect() as conn:
-        result = conn.execute(insert(countries_table), countries_data)
-        conn.commit()
-
-    with engine.connect() as conn:
-        result = conn.execute(insert(cities_table), cities_data)
-        conn.commit()
-
+    main()
