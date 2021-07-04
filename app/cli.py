@@ -12,7 +12,7 @@ class Database(object):
 @click.option('--db-home', envvar='DATABASE_HOME', default='.db')
 @click.option('--debug/--no-debug', default=False, envvar='REPO_DEBUG')
 @click.pass_context
-def cli(ctx, repo_home, debug):
+def main(ctx, repo_home, debug):
     ctx.obj = Repo(repo_home, debug)
     print("Hello CLI!")
 

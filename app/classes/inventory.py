@@ -11,7 +11,6 @@ class Inventory(UserList):
         self.path = path
         self.read()
 
-
     def read(self):
         with open(self.path) as handle:
             for row in csv.reader(handle):

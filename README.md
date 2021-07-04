@@ -1,2 +1,3 @@
 # patsy-new
-Prototype of a new Preservation Asset Tracking System (PATSy)
+
+A prototype for a new Preservation Asset Tracking System (PATSy)
