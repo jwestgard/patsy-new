@@ -1,1 +1,2 @@
-from app.commands import load as loadcommand
+from app.commands import load
+from app.commands import dump
