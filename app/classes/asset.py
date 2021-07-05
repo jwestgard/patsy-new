@@ -1,7 +1,8 @@
 class Asset:
 
-    def __init__(self, id, batch, sourcefile, sourceline, filename, bytes, timestamp,
-                 storage_path):
+    def __init__(self, id, batch, sourcefile, sourceline, 
+        filename, bytes, timestamp, storage_path):
+
         self.id = int(id)
         self.batch = batch
         self.sourcefile = sourcefile

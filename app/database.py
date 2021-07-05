@@ -5,46 +5,29 @@ from sqlalchemy import Table, Column, Integer, String
 from sqlalchemy import ForeignKey
 from sqlalchemy import insert
 
-import csv
-import sys
+import os
 
-DBFILE = sys.argv[1]
 
-if __name__ == "__main__":
+class Database(object):
 
-    engine = create_engine(f"sqlite+pysqlite:///{DBFILE}", echo=True, future=True)
+    def __init__(self, dbfile=None):
+        self.dbfile = dbfile
+        self.engine = create_engine(
+                f"sqlite+pysqlite:///{dbfile}", echo=True, future=True
+                )
+        self.metadata = MetaData()
 
-    metadata = MetaData()
+        assets_table = Table(
+            "assets", self.metadata,
+            Column('id', Integer, primary_key=True),
+            Column('batch', String(30)),
+            Column('sourcefile', String),
+            Column('sourceline', Integer),
+            Column('filename', String),
+            Column('bytes', Integer),
+            Column('timestamp', String),
+            Column('storage_path', String)
+        )
 
-    countries_table = Table(
-        "countries",
-        metadata,
-        Column('id', Integer, primary_key=True),
-        Column('old_id', Integer),
-        Column('name', String(30)),
-        Column('native', String)
-    )
-
-    cities_table = Table(
-        "cities",
-        metadata,
-        Column('id', Integer, primary_key=True),
-        Column('old_id', Integer),
-        Column('name', String(50)),
-        Column('native', String),
-        Column('country_id', ForeignKey('countries.id'), nullable=False)
-    )
-
-    metadata.create_all(engine)
-
-    countries_data = [row for row in csv.DictReader(open('csv/countries.csv'))]
-    cities_data = [row for row in csv.DictReader(open('csv/cities.csv'))]
-
-    with engine.connect() as conn:
-        result = conn.execute(insert(countries_table), countries_data)
-        conn.commit()
-
-    with engine.connect() as conn:
-        result = conn.execute(insert(cities_table), cities_data)
-        conn.commit()
+        self.metadata.create_all(self.engine)
 

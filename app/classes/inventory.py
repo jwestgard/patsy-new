@@ -2,6 +2,8 @@ from collections import UserList
 import csv
 import os
 
+from .asset import Asset as Asset
+
 
 class Inventory(UserList):
 

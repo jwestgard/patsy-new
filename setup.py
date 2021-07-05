@@ -10,7 +10,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'newpatsy=app.cli:main',
+            'newpatsy=app.__init__:cli',
         ],
     },
 )

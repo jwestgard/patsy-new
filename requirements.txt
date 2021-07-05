@@ -1,1 +1,4 @@
 click==8.0.1
+greenlet==1.1.0
+-e git+git@github.com:jwestgard/patsy-new.git@13bf12cf9ea0fb8f762a1e369e7425143d54671f#egg=patsy_new
+SQLAlchemy==1.4.20
