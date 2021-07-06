@@ -18,3 +18,6 @@ class Inventory(UserList):
             for row in csv.reader(handle):
                 asset = Asset(*row)
                 self.append(asset)
+
+    def __repr__(self):
+        return f"Inventory {self.filename} with {len(self)} items"

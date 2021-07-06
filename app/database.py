@@ -17,7 +17,7 @@ class Database(object):
                 )
         self.metadata = MetaData()
 
-        assets_table = Table(
+        self.assets_table = Table(
             "assets", self.metadata,
             Column('id', Integer, primary_key=True),
             Column('batch', String(30)),
